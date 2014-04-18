@@ -2,11 +2,15 @@
 """
 dictdiff.py - Python diff / merge of simple dictionaries / lists
 
-Author: Jure Erznožnik, 4.2014
+Author: Jure Erznožnik, 4.2014, jure.erznoznik@gmail.com
+Package: https://github.com/velis74/dictdiff
 
 Important classes / functions:
   dictdiff: Creates the shortest possible diff dictionary
   dictmerge: applies a diff dictionary to base
+
+TODO: currently nothing
+
   
 © Jure Erznožnik 2013-
 This file is subject to modified BSD license
@@ -34,12 +38,7 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-TODO: currently nothing
 """
-
-from collections import OrderedDict
-from pprint import pprint
 
 
 class izipDestinationMatching(object):
@@ -90,7 +89,7 @@ def dictdiff(a, b, searchAttrs=[]):
         if isinstance(a, list) and isinstance(b, list):
             return [dictdiff(v1, v2, searchAttrs) for v1, v2 in izip_destination(a, b, searchAttrs)]
         return b
-    res = OrderedDict()
+    res = {}
     if izipDestinationMatching in b:
         keepKey = b[izipDestinationMatching].attr
         del b[izipDestinationMatching]
@@ -100,7 +99,6 @@ def dictdiff(a, b, searchAttrs=[]):
         v1 = a.get(key, None)
         v2 = b.get(key, None)
         if keepKey == key or v1 != v2: res[key] = dictdiff(v1, v2, searchAttrs)
-    if len(res) <= 1: res = dict(res)  # This is only here for pretty print (OrderedDict doesn't pprint nicely)
     return res
 
 
@@ -118,12 +116,11 @@ def dictmerge(a, b, searchAttrs=[]):
         if isinstance(a, list) and isinstance(b, list):
             return [dictmerge(v1, v2, searchAttrs) for v1, v2 in izip_destination(a, b, searchAttrs, False)]
         return b
-    res = OrderedDict()
+    res = {}
     for key in sorted(set(a.keys() + b.keys())):
         v1 = a.get(key, None)
         v2 = b.get(key, None)
         #print "processing", key, v1, v2, key not in b, dictmerge(v1, v2)
         if v2 is not None: res[key] = dictmerge(v1, v2, searchAttrs)
         elif key not in b: res[key] = v1
-    if len(res) <= 1: res = dict(res)  # This is only here for pretty print (OrderedDict doesn't pprint nicely)
     return res

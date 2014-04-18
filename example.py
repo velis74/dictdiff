@@ -1,4 +1,5 @@
 # encoding: utf-8
+# This file is so pathetic it doesn't even need a license
 from dictdiff import dictdiff, dictmerge
 from pprint import pprint
 
@@ -28,7 +29,7 @@ a = {'Content': [
                                            {'align': 'right', 'editable': True, 'formatter': 'integer', 'label': 'Unit', 'name': 'crn_unit'},
                                            {'align': 'right', 'editable': True, 'formatter': 'integer', 'label': 'Rnd', 'name': 'crn_rounding'},
                                            {'editable': True, 'edittype': 'text', 'label': 'Alfa code', 'name': 'crn_code_a'},
-                                           {'editable': True, 'edittype': 'text', 'label': 'Numeric code', 'name': 'crn_code_n'}],
+                                           {'editable': True, 'edittype': 'number', 'label': 'Numeric code', 'name': 'crn_code_n'}],
                               'rowList': [10, 20, 30],
                               'rowNum': 10,
                               'rownumbers': True,
@@ -111,7 +112,8 @@ b = {'Content': [
                                            {'align': 'right', 'editable': True, 'formatter': 'integer', 'label': 'Unit', 'name': 'crn_unit'},
                                            {'align': 'right', 'editable': True, 'formatter': 'integer', 'label': 'Rnd', 'name': 'crn_rounding'},
                                            {'editable': True, 'edittype': 'text', 'label': 'Alfa code', 'name': 'crn_code_a'},
-                                           {'editable': True, 'edittype': 'text', 'label': 'Numeric code', 'name': 'crn_code_n'}],
+                                           {'editable': True, 'edittype': 'text', 'label': 'Numeric code', 'name': 'crn_code_n'},
+                                           {'editable': True, 'edittype': 'text', 'label': 'Yet another code', 'name': 'crn_code_x'}],
                               'rowList': [10, 20, 30],
                               'rowNum': 10,
                               'rownumbers': True,
@@ -178,6 +180,7 @@ pprint(c)
 d = dictmerge(a, c, ["ID", "name"])
 pprint(d)
 
-#Even if we don't have stored diff, we can apply b to a so that we apply any prior modifications yet keep the new features introduced in a later version
+#Even if we don't have stored diff, we can apply b to a so that we apply any 
+#prior modifications (b) yet keep the new features introduced in a later version of a
 d = dictmerge(a, b)
 pprint(d)
