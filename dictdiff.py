@@ -70,7 +70,7 @@ def izip_destination(a, b, attrs, addMarker=True):
             yield item, item
 
 
-def dictdiff(a, b, searchAttrs=[]):
+def dictdiff(a, b, searchAttrs=[], ignoreKeys=[]):
     """
     returns a dictionary which represents difference from a to b
     the return dict is as short as possible:
@@ -83,11 +83,12 @@ def dictdiff(a, b, searchAttrs=[]):
     @param a: original dict
     @param b: new dict
     @param searchAttrs: list of strings (keys to search for in sub-dicts)
+    @param ignoreKeys: list of keys that should be ignored during dict comparison
     @return: dict / list / whatever input is
     """
     if not (isinstance(a, dict) and isinstance(b, dict)):
         if isinstance(a, list) and isinstance(b, list):
-            return [dictdiff(v1, v2, searchAttrs) for v1, v2 in izip_destination(a, b, searchAttrs)]
+            return [dictdiff(v1, v2, searchAttrs, ignoreKeys) for v1, v2 in izip_destination(a, b, searchAttrs)]
         return b
     res = {}
     if izipDestinationMatching in b:
@@ -96,13 +97,14 @@ def dictdiff(a, b, searchAttrs=[]):
     else:
         keepKey = izipDestinationMatching
     for key in sorted(set(a.keys() + b.keys())):
+        if key in ignoreKeys: continue
         v1 = a.get(key, None)
         v2 = b.get(key, None)
-        if keepKey == key or v1 != v2: res[key] = dictdiff(v1, v2, searchAttrs)
+        if keepKey == key or v1 != v2: res[key] = dictdiff(v1, v2, searchAttrs, ignoreKeys)
     return res
 
 
-def dictmerge(a, b, searchAttrs=[]):
+def dictmerge(a, b, searchAttrs=[], ignoreKeys=[]):
     """
     Returns a dictionary which merges differences recorded in b to base dictionary a
     Also processes list values where the resulting list size will match that of a
@@ -110,17 +112,21 @@ def dictmerge(a, b, searchAttrs=[]):
     @param a: original dict
     @param b: diff dict to patch into a
     @param searchAttrs: list of strings (keys to search for in sub-dicts)
+    @param ignoreKeys: list of keys that should be ignored during dict comparison
     @return: dict / list / whatever input is
     """
     if not (isinstance(a, dict) and isinstance(b, dict)):
         if isinstance(a, list) and isinstance(b, list):
-            return [dictmerge(v1, v2, searchAttrs) for v1, v2 in izip_destination(a, b, searchAttrs, False)]
+            return [dictmerge(v1, v2, searchAttrs, ignoreKeys) for v1, v2 in izip_destination(a, b, searchAttrs, False)]
         return b
     res = {}
     for key in sorted(set(a.keys() + b.keys())):
         v1 = a.get(key, None)
+        if key in ignoreKeys:
+            if v1 is not None: res[key] = v1
+            continue
         v2 = b.get(key, None)
         #print "processing", key, v1, v2, key not in b, dictmerge(v1, v2)
-        if v2 is not None: res[key] = dictmerge(v1, v2, searchAttrs)
+        if v2 is not None: res[key] = dictmerge(v1, v2, searchAttrs, ignoreKeys)
         elif key not in b: res[key] = v1
     return res
