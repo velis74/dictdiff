@@ -2,7 +2,7 @@
 """
 dictdiff.py - Python diff / merge of simple dictionaries / lists
 
-Author: Jure Erznožnik, 4.2014, jure.erznoznik@gmail.com
+Author: Jure ErznoÅ¾nik, 4.2014, jure.erznoznik@gmail.com
 Package: https://github.com/velis74/dictdiff
 
 Important classes / functions:
@@ -11,8 +11,8 @@ Important classes / functions:
 
 TODO: currently nothing
 
-  
-© Jure Erznožnik 2013-
+
+Â© Jure ErznoÅ¾nik 2013-
 This file is subject to modified BSD license
 
 All rights reserved.
@@ -96,7 +96,7 @@ def dictdiff(a, b, searchAttrs=[], ignoreKeys=[]):
         del b[izipDestinationMatching]
     else:
         keepKey = izipDestinationMatching
-    for key in sorted(set(a.keys() + b.keys())):
+    for key in sorted(set(list(a.keys()) + list(b.keys()))):
         if key in ignoreKeys: continue
         v1 = a.get(key, None)
         v2 = b.get(key, None)
@@ -120,7 +120,7 @@ def dictmerge(a, b, searchAttrs=[], ignoreKeys=[]):
             return [dictmerge(v1, v2, searchAttrs, ignoreKeys) for v1, v2 in izip_destination(a, b, searchAttrs, False)]
         return b
     res = {}
-    for key in sorted(set(a.keys() + b.keys())):
+    for key in sorted(set(list(a.keys()) + list(b.keys()))):
         v1 = a.get(key, None)
         if key in ignoreKeys:
             if v1 is not None: res[key] = v1
