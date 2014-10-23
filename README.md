@@ -6,6 +6,15 @@ Python diff / merge basic dictionaries / lists
 A simple library to record changes between two simple objects and merge the changes into base object to get the changed object.
 Perfect if you want to store what was changed (e.g. by storing a JSON of the resulting object) and then at a later time apply the changes back to auto-generated base data.
 
+**Features**
+
+* Compares two dictionary objects recursively
+* Compares two lists
+ * Detects item movements within compared lists based on item identifier key, e.g. "id" or "name"
+* Stores comparison differences in a compact dictionary
+* Supports base dictionary changes while still properly applying a previously recorded diff
+* Supports merging two dictionaries to produce a result with features from both sources (see more explanation below)
+
 **Common usage case:**
 
 * You have a function that is able to generate the same settings dictionary over and over (*base dictionary*)
